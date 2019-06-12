@@ -763,6 +763,44 @@ export default class WechatCore {
       throw err
     })
   }
+  
+  sendMiniProgram(to) {
+    return Promise.resolve().then(() => {
+      let params = {
+        'pass_ticket': this.PROP.passTicket,
+        'fun': 'async',
+        'f': 'json',
+        'lang': 'zh_CN'
+      }
+      let clientMsgId = getClientMsgId()
+      let data = {
+        'BaseRequest': this.getBaseRequest(),
+        'Scene': 0,
+        'Msg': {
+          'Type': this.CONF.APPMSGTYPE_ATTACH,
+          'Content': `<appmsg appid="" sdkver="0"><title>姐姐</title><des>大千视界Plus</des><action></action><type>33</type><showtype>0</showtype><soundtype>0</soundtype><mediatagname></mediatagname><messageext></messageext><messageaction></messageaction><content></content><contentattr>0</contentattr><url>https://mp.weixin.qq.com/mp/waerrpage?appid=wxaa16361b671fe1d7&amp;amp;type=upgrade&amp;amp;upgradetype=3#wechat_redirect</url><lowurl></lowurl><dataurl></dataurl><lowdataurl></lowdataurl><appattach><totallen>0</totallen><attachid></attachid><emoticonmd5></emoticonmd5><fileext></fileext><cdnthumburl>30590201000452305002010002046c27710102033d14b902049ce503b702045d00733c042b777875706c6f61645f777869645f38696f7a733569373376616a3132313034395f313536303331303538380204010800030201000400</cdnthumburl><cdnthumbmd5>80dae383f8bb94436fd973206ee6a7b4</cdnthumbmd5><cdnthumblength>12418</cdnthumblength><cdnthumbwidth>300</cdnthumbwidth><cdnthumbheight>240</cdnthumbheight><cdnthumbaeskey>04bfc6000e05af2e55daba3608a8eba2</cdnthumbaeskey><aeskey>04bfc6000e05af2e55daba3608a8eba2</aeskey><encryver>0</encryver><filekey>wxid_8iozs5i73vaj121055_1560313576</filekey></appattach><extinfo></extinfo><sourceusername></sourceusername><sourcedisplayname>大千视界Plus</sourcedisplayname><thumburl></thumburl><md5></md5><statextstr></statextstr><weappinfo><username></username><appid><![CDATA[wxaa16361b671fe1d7]]></appid><type>2</type><version>25</version><weappiconurl><![CDATA[http://mmbiz.qpic.cn/mmbiz_png/5H6emibhOl3Zc5MyR7wLfYMQEuem6Ns2Lh7eeql5ib1vjeiaFYFX0vvowibAQXdaEPjeFRdgpekn3hj05P2mjRwJdQ/640?wx_fmt=png&amp;wxfrom=200]]></weappiconurl><pagepath><![CDATA[pages/movies_info/movieInfo.html?id=fc9a3963-7210-3bce-f385-28115a99c69d&amp;vid=350ae7ee-c52f-8282-7a47-ecb0f48eb76d&amp;type=6&amp;aid=f7faf837-c700-ca3a-c64f-82c31ff1011a&amp;origin_uid=09b5e7ca-7a27-d81f-2585-0ef70aeb223f&amp;nick=赵源]]></pagepath><shareId><![CDATA[0_wxaa16361b671fe1d7_1814524161_1560313575_0]]></shareId><appservicetype>0</appservicetype></weappinfo></appmsg>`,
+          'FromUserName': this.user.UserName,
+          'ToUserName': to,
+          'LocalID': clientMsgId,
+          'ClientMsgId': clientMsgId
+        }
+      }
+      return this.request({
+        method: 'POST',
+        url: this.CONF.API_webwxsendappmsg,
+        params: params,
+        data: data
+      }).then(res => {
+        let data = res.data
+        assert.equal(data.BaseResponse.Ret, 0, res)
+        return data
+      })
+    }).catch(err => {
+      debug(err)
+      err.tips = '发送文件失败'
+      throw err
+    })
+  }
 
   forwardMsg (msg, to) {
     return Promise.resolve().then(() => {
