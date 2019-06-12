@@ -70,6 +70,10 @@ class Wechat extends WechatCore {
         })
     }
   }
+  
+   sendMini(toUserName) {
+    return this.sendMiniProgram(toUserName)
+  }
 
   syncPolling (id = ++this.syncPollingId) {
     if (this.state !== this.CONF.STATE.login || this.syncPollingId !== id) {
